@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import MainLayout from './components/MainLayout';
+import SignUpForm from './components/UserForm/SignUpForm';
+import LoginForm from './components/UserForm/LoginForm';
+import MainPage from './components/ChatWindow/MainPage';
+import { VideoChatContextProvider } from './context/VideoChatContext';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from storage
+
+    if (token) {
+      // Set the token in the Axios headers for authentication
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<MainLayout />} />
+        <Route path="/signin" element={<LoginForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
+
+        <Route path="/mainpage" element={
+          <VideoChatContextProvider>
+            <MainPage />
+          </VideoChatContextProvider>
+        } />
+      </Routes>
+    </>
   );
-}
+};
 
 export default App;
