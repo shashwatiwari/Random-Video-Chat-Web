@@ -97,6 +97,9 @@ function findRandomPartner(socket) {
     return null;
 }
 
+app.get('*', (res, req) => {
+    res.send({ msg: "hey 404" });
+});
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
