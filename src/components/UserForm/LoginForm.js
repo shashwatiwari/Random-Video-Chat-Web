@@ -14,7 +14,7 @@ const LoginForm = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('/api/auth/signin', {
+            const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/signin`, {
                 email,
                 password
             });
