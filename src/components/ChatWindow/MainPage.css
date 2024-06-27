@@ -81,12 +81,14 @@ body {
 }
 
 .chat-message.own {
+    font-size: 13px;
     justify-content: flex-end;
     padding: 0px 5px;
     /* background-color: #dcf8c6; */
 }
 
 .chat-message.partner {
+    font-size: 13px;
     justify-content: flex-start;
     padding: 0px 5px;
     /* background-color: #f3f3f3; */
