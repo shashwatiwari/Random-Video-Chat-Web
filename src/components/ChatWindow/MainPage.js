@@ -148,7 +148,14 @@ const MainPage = () => {
                 newPeer.addStream(stream); // Attach user's stream to the peer connection
 
                 newPeer.on('signal', (data) => {
-                    channel.current.trigger('client-signal', { signal: data, id: localStorage.getItem('userId') });
+                    console.log('Sending signal data:', data);
+                    fetch('https://websocket-server-roan.vercel.app/signal', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ signalData: data, id: localStorage.getItem('userId') })
+                    });
                 });
 
                 newPeer.on('stream', (partnerStream) => {
