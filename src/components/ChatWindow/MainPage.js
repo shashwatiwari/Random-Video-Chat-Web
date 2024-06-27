@@ -142,6 +142,7 @@ const MainPage = () => {
                 const newPeer = new Peer({
                     initiator: true, // User starts the call
                     trickle: false, // Disable trickle ICE for faster connections
+                    stream: stream,
                 });
 
                 newPeer.addStream(stream); // Attach user's stream to the peer connection
@@ -166,6 +167,39 @@ const MainPage = () => {
             pusher.current.unsubscribe('my-channel');
         };
     };
+
+    useEffect(() => {
+        const handleSignal = ({ signal, id }) => {
+            if (id !== localStorage.getItem('userId')) {
+                if (peer) {
+                    peer.signal(signal);
+                } else {
+                    const newPeer = new Peer({
+                        initiator: false,
+                        trickle: false,
+                    });
+
+                    newPeer.on('signal', (data) => {
+                        channel.current.trigger('client-signal', { signal: data, id: localStorage.getItem('userId') });
+                    });
+
+                    newPeer.on('stream', (partnerStream) => {
+                        setPartnerStream(partnerStream);
+                    });
+
+                    newPeer.signal(signal);
+                    setPeer(newPeer);
+                }
+            }
+        };
+
+        channel.current.bind('client-signal', handleSignal);
+
+        return () => {
+            channel.current.unbind('client-signal', handleSignal);
+        };
+    }, [peer]);
+
 
     // Handle user disconnect on page unload
     useEffect(() => {
